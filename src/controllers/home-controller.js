@@ -19,21 +19,27 @@ export class HomeController {
    * @param {Function} next - Express next middleware function.
    */
   async index (req, res, next) {
-    const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues`
-      , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN } })
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-      })
+    let page = 1
+    let numberOfPages
+    const issues = []
+    do {
+      const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues?page=${page}`
+        , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN } })
+        .then(response => {
+          if (response.ok) {
+            numberOfPages = response.headers.raw()['x-total-pages'][0]
+            return response.json()
+          }
+        })
 
-    const issues = response.map(issueData => {
-      return {
-        title: issueData.title,
-        description: issueData.description,
-        avatarSrc: issueData.author.avatar_url
-      }
-    })
+      issues.push(...response.map(issueData => {
+        return {
+          title: issueData.title,
+          description: issueData.description,
+          avatarSrc: issueData.author.avatar_url
+        }
+      }))
+    } while (page++ < numberOfPages)
 
     res.render('home/index', { viewData: { issues }, title: 'Issue list' })
   }
