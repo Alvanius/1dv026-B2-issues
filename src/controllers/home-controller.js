@@ -41,6 +41,6 @@ export class HomeController {
       }))
     } while (page++ < numberOfPages)
 
-    res.render('home/index', { viewData: { issues }, title: 'Issue list' })
+    res.render('home/index', { viewData: { issues: issues.reverse() }, title: 'Issue list' })
   }
 }
