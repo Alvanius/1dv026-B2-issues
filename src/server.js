@@ -16,28 +16,32 @@ import { router } from './routes/router.js'
 const PORT = process.env.PORT
 const baseURL = process.env.BASE_URL
 const directoryFullName = dirname(fileURLToPath(import.meta.url))
+
 const app = express()
 
 app.use(logger('dev'))
-app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'img-src': ["'self'", 'gitlab.lnu.se']
+    }
+  })
+)
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
 app.set('view engine', 'hbs')
 
-// Configurations of the view engine.
 app.engine('hbs', hbs.express4({
   defaultLayout: join(directoryFullName, 'views', 'layouts', 'default'),
   partialsDir: join(directoryFullName, 'views', 'partials')
 }))
-app.set('views', join(directoryFullName, 'views'))
 
-app.use(express.urlencoded({ extended: false }))
+app.set('views', join(directoryFullName, 'views'))
 app.use(express.static(join(directoryFullName, '..', 'public')))
 
-
 app.use(function (req, res, next) {
-  if (req.session.flash) {
-    res.locals.flash = req.session.flash
-    delete req.session.flash
-  }
   res.locals.baseURL = baseURL
   next()
 })
@@ -45,17 +49,12 @@ app.use(function (req, res, next) {
 app.use('/', router)
 
 app.use(function (err, req, res, next) {
-    if (app.get('env') === 'development') {
-        res
-        .status(err.status || 500)
-        .render('errors/error', { error: err })
-    }
-    
+  if (app.get('env') === 'development') {
+    res
+      .status(err.status || 500)
+      .render('errors/error', { error: err })
+  }
 })
-
-// ------------------------------------
-//      End of Middleware section
-// ------------------------------------
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)

@@ -1,0 +1,13 @@
+<h1>First page with issue list</h1>
+
+{{#if viewData.issues.length }}
+<div class="issuewrapper">
+{{#each viewData.issues}}
+    <div class="issue">
+    <h3>{{this.title}}</h3>
+    <strong>{{this.description}}</strong>
+    <img src="https://gitlab.lnu.se/uploads/-/system/user/avatar/587/avatar.png" alt="avatar">
+    </div>
+{{/each}}
+</div>
+{{/if}}
