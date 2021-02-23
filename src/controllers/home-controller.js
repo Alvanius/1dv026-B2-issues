@@ -36,7 +36,8 @@ export class HomeController {
           title: issueData.title,
           description: issueData.description,
           avatarSrc: issueData.author.avatar_url,
-          id: issueData.iid
+          id: issueData.iid,
+          closedstate: issueData.state === 'opened' ? '' : issueData.state
         }
       }))
     } while (page++ < numberOfPages)

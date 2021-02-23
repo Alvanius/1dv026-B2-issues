@@ -5,28 +5,27 @@
  * @version 1.0.0
  */
 import fetch from 'node-fetch'
+import { basename } from 'path'
 
 /**
  * Encapsulates a controller.
  */
 export class IssueController {
   /**
-   * Called to close an issue.
+   * Called to change the state of an issue.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async close (req, res, next) {
+  async changeState (req, res, next) {
     const issueID = req.params.id
-    const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues/${issueID}?state_event=close`
-      , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN }, method: 'PUT' })
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-      })
-    console.log(response)
+    const requestedAction = basename(req.path) // evaluates to reopen or close depending on the action of the form the user submitted
+    await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues/${issueID}?state_event=${requestedAction}`, {
+      headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN },
+      method: 'PUT'
+    })
+    // .catch(error => /* failed to create new issue */ )
     res.redirect('/')
   }
 

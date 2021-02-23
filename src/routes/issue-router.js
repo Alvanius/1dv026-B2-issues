@@ -12,6 +12,7 @@ export const router = express.Router()
 
 const controller = new IssueController()
 
-router.post('/:id/close', controller.close)
+router.post('/:id/close', controller.changeState)
+router.post('/:id/reopen', controller.changeState)
 router.get('/new', controller.new)
 router.post('/create', controller.create)

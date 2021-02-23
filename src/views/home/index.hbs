@@ -4,12 +4,23 @@
 <div class="issuewrapper">
 {{#each viewData.issues}}
     <div class="issue">
+      <h5>{{this.closedstate}}</h5>
     <h3>{{this.title}}</h3>
     <strong>{{this.description}}</strong>
     <img src="https://gitlab.lnu.se/uploads/-/system/user/avatar/587/avatar.png" alt="avatar">
-    <form method="post" action="issues/{{this.id}}/close">
+
+    {{#if this.closedstate }}
+      <form method="post" action="issues/{{this.id}}/reopen">
+      <button type="submit">Reopen issue</button>
+      </form>
+    {{/if}}
+
+    {{#unless this.closedstate }}
+      <form method="post" action="issues/{{this.id}}/close">
       <button type="submit">Close issue</button>
-    </form>
+      </form>
+    {{/unless}}
+    
     </div>
 {{/each}}
 </div>
