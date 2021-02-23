@@ -1,0 +1,11 @@
+<h1>New Issue</h1>
+<div>
+<form method="post" action="./issues/create">
+  <div class="form-group">
+      <input type="text" class="form-control" name="issuetitle" placeholder="Title" required="required" autofocus="autofocus" minlength="1" maxlength="40"/>
+      <input type="text" class="form-control" name="labels" placeholder="Labels"  autofocus="autofocus" minlength="1" maxlength="40"/>
+    <textarea class="form-control" name="description" placeholder="Description text here" autofocus="autofocus" rows="5" cols="50" minlength="1" maxlength="5000"></textarea>
+  </div>
+  <button type="submit">Create Issue</button>
+</form>
+</div>
