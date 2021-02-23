@@ -31,12 +31,12 @@ export class HomeController {
             return response.json()
           }
         })
-
       issues.push(...response.map(issueData => {
         return {
           title: issueData.title,
           description: issueData.description,
-          avatarSrc: issueData.author.avatar_url
+          avatarSrc: issueData.author.avatar_url,
+          id: issueData.iid
         }
       }))
     } while (page++ < numberOfPages)
