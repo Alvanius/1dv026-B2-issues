@@ -23,6 +23,9 @@ export class HookController {
       id: req.body.object_attributes.iid
     }
     switch (req.body.object_attributes.action) {
+      case 'open':
+        res.io.emit('issueCreated', issueDetails)
+        break
       case 'update':
         res.io.emit('issueUpdated', issueDetails)
         break
