@@ -17,7 +17,15 @@ export class HookController {
    * @param {Function} next - Express next middleware function.
    */
   handleIssue (req, res, next) {
+    const issueDetails = {
+      text: req.body.object_attributes.description,
+      title: req.body.object_attributes.title,
+      id: req.body.object_attributes.iid
+    }
     switch (req.body.object_attributes.action) {
+      case 'update':
+        res.io.emit('issueUpdated', issueDetails)
+        break
       case 'reopen':
         res.io.emit('issueReopen', {
           id: req.body.object_attributes.iid
