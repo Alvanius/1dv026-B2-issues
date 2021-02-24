@@ -12,6 +12,8 @@ import logger from 'morgan'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { router } from './routes/router.js'
+import http from 'http'
+import { Server } from 'socket.io'
 
 const PORT = process.env.PORT
 const baseURL = process.env.BASE_URL
@@ -31,6 +33,19 @@ app.use(
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+const server = http.createServer(app)
+const io = new Server(server, {
+  secure: true
+})
+
+io.on('connection', (socket) => {
+  console.log('A user connected')
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected')
+  })
+})
+
 app.set('view engine', 'hbs')
 
 app.engine('hbs', hbs.express4({
@@ -43,6 +58,7 @@ app.use(express.static(join(directoryFullName, '..', 'public')))
 
 app.use(function (req, res, next) {
   res.locals.baseURL = baseURL
+  res.io = io
   next()
 })
 
@@ -56,7 +72,7 @@ app.use(function (err, req, res, next) {
   }
 })
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
   console.log('Press Ctrl-C to terminate...')
 })
