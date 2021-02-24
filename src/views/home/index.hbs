@@ -3,7 +3,7 @@
 {{#if viewData.issues.length }}
 <div class="issuewrapper">
 {{#each viewData.issues}}
-    <div id="id{{this.id}}" class="issue">
+    <div id="issue{{this.id}}" class="issue">
       <h5>{{this.closedstate}}</h5>
     <h3>{{this.title}}</h3>
     <strong>{{this.description}}</strong>

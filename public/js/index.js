@@ -18,10 +18,8 @@ socket.on('issueReopen', arg => {
  * @param {string} action - The action that is possible to perform on the issue.
  */
 function changeStateOfIssue (id, statetext, action) {
-  const issue = document.querySelector(`#id${id}`)
-  issue.firstElementChild.textContent = statetext
-  const form = document.querySelector(`#id${id} form`)
-  form.setAttribute('action', `issues/${id}/${action}`)
-  const button = document.querySelector(`#id${id} button`)
-  button.textContent = action
+  const issueID = '#issue' + id
+  document.querySelector(issueID + ' h5').textContent = statetext
+  document.querySelector(issueID + ' form').setAttribute('action', `issues/${id}/${action}`)
+  document.querySelector(issueID + ' button').textContent = action + ' issue'
 }
