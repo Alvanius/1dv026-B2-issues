@@ -63,7 +63,7 @@ export class IssueController {
       , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN }, method: 'POST' })
       .then(response => {
         if (response.status === 201) {
-          res.redirect(201, '/')
+          res.redirect('/')
         } else if (response.status === 400) {
           const error = new Error()
           error.status = 400
