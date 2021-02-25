@@ -17,27 +17,26 @@ export class HookController {
    * @param {Function} next - Express next middleware function.
    */
   handleIssue (req, res, next) {
+    const reqIssue = req.body.object_attributes
+    const id = reqIssue.iid
     const issueDetails = {
-      text: req.body.object_attributes.description,
-      title: req.body.object_attributes.title,
-      id: req.body.object_attributes.iid
+      text: reqIssue.description,
+      title: reqIssue.title,
+      id
     }
-    switch (req.body.object_attributes.action) {
+    switch (reqIssue.action) {
       case 'open':
+        issueDetails.avatarSrc = req.body.user.avatar_url
         res.io.emit('issueCreated', issueDetails)
         break
       case 'update':
         res.io.emit('issueUpdated', issueDetails)
         break
       case 'reopen':
-        res.io.emit('issueReopen', {
-          id: req.body.object_attributes.iid
-        })
+        res.io.emit('issueReopen', { id })
         break
       case 'close':
-        res.io.emit('issueClosed', {
-          id: req.body.object_attributes.iid
-        })
+        res.io.emit('issueClosed', { id })
         break
     }
     res.status(200).send('Received issue hook')

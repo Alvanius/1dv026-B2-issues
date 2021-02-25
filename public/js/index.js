@@ -1,22 +1,26 @@
 import '../socket.io/socket.io.js'
 
-const socket = window.io()
+const wrapper = document.querySelector('#issuewrapper')
 
-socket.on('issueClosed', arg => {
-  changeStateOfIssue(arg.id, 'Closed', 'reopen')
-})
+if (wrapper) {
+  const socket = window.io()
 
-socket.on('issueReopen', arg => {
-  changeStateOfIssue(arg.id, '', 'close')
-})
+  socket.on('issueClosed', arg => {
+    changeStateOfIssue(arg.id, 'Closed', 'reopen')
+  })
 
-socket.on('issueUpdated', arg => {
-  updateIssue(arg.id, arg.title, arg.text)
-})
+  socket.on('issueReopen', arg => {
+    changeStateOfIssue(arg.id, '', 'close')
+  })
 
-socket.on('issueCreated', arg => {
-  createIssue(arg.id, arg.title, arg.text)
-})
+  socket.on('issueUpdated', arg => {
+    updateIssue(arg.id, arg.title, arg.text)
+  })
+
+  socket.on('issueCreated', arg => {
+    createIssue(arg.id, arg.title, arg.text, arg.avatarSrc)
+  })
+}
 
 /**
  * Called to change state of an issue.
@@ -51,15 +55,16 @@ function updateIssue (id, title, text) {
  * @param {number} id - The id of the issue.
  * @param {string} title - The text to use to display the state of the issue.
  * @param {string} text - The action that is possible to perform on the issue.
+ * @param {string} avatarSrc - The image src of the avatar to display.
  */
-function createIssue (id, title, text) {
+function createIssue (id, title, text, avatarSrc) {
   const issueTemplate = document.createElement('template')
   issueTemplate.innerHTML = `
   <div class="issue">
     <h5></h5> 
     <h3 id="title"></h3>
     <strong id="text"></strong>
-    <img src="https://gitlab.lnu.se/uploads/-/system/user/avatar/587/avatar.png" alt="avatar"> 
+    <img alt="avatar"> 
     <form method="post">
     <button type="submit">Close issue</button>
     </form>
@@ -68,8 +73,8 @@ function createIssue (id, title, text) {
   issueTemplate.content.querySelector('#title').textContent = title
   issueTemplate.content.querySelector('.issue').setAttribute('id', `issue${id}`)
   issueTemplate.content.querySelector('form').setAttribute('action', `issues/${id}/close`)
+  issueTemplate.content.querySelector('img').setAttribute('src', avatarSrc)
   const newIssue = issueTemplate.content.cloneNode(true)
-  const wrapper = document.querySelector('#issuewrapper')
   if (wrapper.firstChild) {
     wrapper.insertBefore(newIssue, wrapper.firstChild)
   } else {
