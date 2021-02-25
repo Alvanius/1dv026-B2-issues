@@ -25,8 +25,18 @@ export class IssueController {
       headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN },
       method: 'PUT'
     })
-    // .catch(error => /* failed to create new issue */ )
-    res.redirect('/')
+      .then(response => {
+        if (!response.ok) {
+          const error = new Error()
+          error.status = 404
+          next(error)
+        } else {
+          res.redirect('/')
+        }
+      })
+      .catch(error => {
+        next(error)
+      })
   }
 
   /**
@@ -48,14 +58,22 @@ export class IssueController {
    * @param {Function} next - Express next middleware function.
    */
   async create (req, res, next) {
-    const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues/?title=${req.body.issuetitle}&description=${req.body.description}&labels=${req.body.labels.split(' ').join(', ')}`
+    await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues/?title=${req.body.issuetitle}&description=${req.body.description}&labels=${req.body.labels.split(' ').join(', ')}`
       , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN }, method: 'POST' })
-    // .catch(error => /* failed to create new issue */ )
-    if (!response.ok) {
-      console.log('failed to create a new issue')
-    } else {
-      console.log('successfully created a new issue')
-    }
-    res.redirect('/')
+      .then(response => {
+        if (response.status === 201) {
+          res.redirect(201, '/')
+        } else if (response.status === 400) {
+          const error = new Error()
+          error.status = 400
+          next(error)
+        } else {
+          const error = new Error()
+          next(error)
+        }
+      })
+      .catch(error => {
+        next(error)
+      })
   }
 }

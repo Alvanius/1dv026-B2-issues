@@ -1,17 +1,22 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="error-template">
-        <h1>
-          {{error.status}}</h1>
-        <h2>
-          {{error.message}}</h2>
-        <div class="error-details">
-          <pre>
-          {{error.stack}}
-          </pre>
-        </div>
-      </div>
-    </div>
-  </div>
+<style>
+  #errorwrap {
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#error {
+    font-size: 40px;
+    color: aqua;
+}
+
+#errortext {
+    font-size: 20px;
+}
+</style>
+<div id="errorwrap">
+    <h1 id="error">{{error}}</h1>
+    <p id="errortext">{{errortext}}</p>
 </div>

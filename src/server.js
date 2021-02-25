@@ -14,6 +14,8 @@ import { fileURLToPath } from 'url'
 import { router } from './routes/router.js'
 import http from 'http'
 import { Server } from 'socket.io'
+import fetch from 'node-fetch'
+const { FetchError } = fetch
 
 const PORT = process.env.PORT
 const baseURL = process.env.BASE_URL
@@ -65,11 +67,23 @@ app.use(function (req, res, next) {
 app.use('/', router)
 
 app.use(function (err, req, res, next) {
-  if (app.get('env') === 'development') {
-    res
-      .status(err.status || 500)
-      .render('errors/error', { error: err })
+  let title = 'An error occured'
+  let error = '500 Internal server error'
+  let errortext = 'Sorry, but something went wrong.'
+  if (err instanceof FetchError) {
+    errortext = 'The action could not be performed. Please try again later.'
+  } else if (err.status === 404) {
+    title = 'Page not found'
+    error = '404 Not Found'
+    errortext = 'Sorry, but the page you were trying to view does not exist.'
+  } else if (err.status === 400) {
+    title = 'Request failed'
+    error = '400 Bad request'
+    errortext = 'A new issue could not be created with the passed data.'
   }
+  res
+    .status(err.status || 500)
+    .render('errors/error', { title, error, errortext })
 })
 
 server.listen(PORT, () => {
