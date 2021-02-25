@@ -1,11 +1,12 @@
 /**
- * Isuue controller.
+ * Issue controller.
  *
  * @author Alva Persson
  * @version 1.0.0
  */
 import fetch from 'node-fetch'
 import { basename } from 'path'
+import { gitlabIssuesURL, headers } from '../gitlabAPIRequest.js'
 
 /**
  * Encapsulates a controller.
@@ -21,10 +22,9 @@ export class IssueController {
   async changeState (req, res, next) {
     const issueID = req.params.id
     const requestedAction = basename(req.path) // evaluates to reopen or close depending on the action of the form the user submitted
-    await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues/${issueID}?state_event=${requestedAction}`, {
-      headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN },
-      method: 'PUT'
-    })
+    const changeStateURL = new URL(gitlabIssuesURL + issueID)
+    changeStateURL.searchParams.append('state_event', requestedAction)
+    await fetch(changeStateURL.toString(), { headers, method: 'PUT' })
       .then(response => {
         if (!response.ok) {
           const error = new Error()
@@ -59,17 +59,20 @@ export class IssueController {
    * @param {Function} next - Express next middleware function.
    */
   async create (req, res, next) {
-    await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues/?title=${req.body.issuetitle}&description=${req.body.description}&labels=${req.body.labels.split(' ').join(', ')}`
-      , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN }, method: 'POST' })
+    const createIssueURL = new URL(gitlabIssuesURL)
+    createIssueURL.searchParams.append('title', req.body.issuetitle)
+    createIssueURL.searchParams.append('description', req.body.description)
+    createIssueURL.searchParams.append('labels', req.body.labels.split(' ').join(', '))
+    await fetch(createIssueURL.toString(), { headers, method: 'POST' })
       .then(response => {
         if (response.status === 201) {
           res.redirect('/')
-        } else if (response.status === 400) {
-          const error = new Error()
-          error.status = 400
-          next(error)
         } else {
+          console.log('unsuccessful attempt to create issue, got response: ', response)
           const error = new Error()
+          if (response.status === 400) {
+            error.status = 400
+          }
           next(error)
         }
       })

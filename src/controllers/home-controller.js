@@ -6,8 +6,7 @@
  */
 
 import fetch from 'node-fetch'
-
-const PROJECT = process.env.PROJECT_ID
+import { gitlabIssuesURL, headers } from '../gitlabAPIRequest.js'
 
 /**
  * Encapsulates a controller.
@@ -25,14 +24,15 @@ export class HomeController {
     let numberOfPages
     const issues = []
     do {
-      const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${PROJECT}/issues?page=${page}`
-        , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN } })
+      const getProjectIssuesURL = new URL(gitlabIssuesURL)
+      getProjectIssuesURL.searchParams.append('page', page)
+      const response = await fetch(getProjectIssuesURL.toString(), { headers })
         .then(response => {
           if (response.ok) {
             numberOfPages = response.headers.raw()['x-total-pages'][0]
             return response.json()
           } else {
-            console.log(`attempting to fetch issues from project ${PROJECT} and failed with status: ${response.status}`)
+            console.log(`attempting to fetch issues from project ${process.env.PROJECT_ID} and failed with status: ${response.status}`)
             res.locals.fetchFailed = true
           }
         })
