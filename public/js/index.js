@@ -1,6 +1,6 @@
 import '../socket.io/socket.io.js'
 
-const wrapper = document.querySelector('#issuewrapper')
+const wrapper = document.querySelector('#issueswrapper')
 
 if (wrapper) {
   const socket = window.io()
@@ -34,6 +34,7 @@ function changeStateOfIssue (id, statetext, action) {
   document.querySelector(issueID + ' h5').textContent = statetext
   document.querySelector(issueID + ' form').setAttribute('action', `issues/${id}/${action}`)
   document.querySelector(issueID + ' button').textContent = action + ' issue'
+  document.querySelector(issueID).classList.toggle('closed')
 }
 
 /**
@@ -61,13 +62,17 @@ function createIssue (id, title, text, avatarSrc) {
   const issueTemplate = document.createElement('template')
   issueTemplate.innerHTML = `
   <div class="issue">
-    <h5></h5> 
-    <h3 id="title"></h3>
-    <strong id="text"></strong>
-    <img alt="avatar"> 
-    <form method="post">
-    <button type="submit">Close issue</button>
-    </form>
+    <div id="textwrapper">
+      <h3 id="title"></h3>
+      <p id="text"></p>
+    </div>
+    <div id="otherwrapper">
+      <img alt="avatar"> 
+      <h5></h5>
+      <form method="post">
+      <button type="submit">Close issue</button>
+      </form>
+    </div>
   </div>`
   issueTemplate.content.querySelector('#text').textContent = text
   issueTemplate.content.querySelector('#title').textContent = title

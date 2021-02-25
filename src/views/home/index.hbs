@@ -1,18 +1,27 @@
-<h1>First page with issue list</h1>
-<a  href="./issues/new">Create new issue</a>
+<div id="top">
+
+  <h1>Issue display</h1>
+<a id="newIssue" href="./issues/new">Create new issue</a>
+</div>
 
 {{#if fetchFailed }}
     <h2>Failed to retrieve issues correctly</h2>
 {{/if}}
 
 {{#if viewData.issues.length }}
-<div id="issuewrapper">
+<div id="issueswrapper">
 {{#each viewData.issues}}
-    <div id="issue{{this.id}}" class="issue">
-      <h5>{{this.closedstate}}</h5>
-    <h3 id="title">{{this.title}}</h3>
-    <strong id="text">{{this.description}}</strong>
+    <div id="issue{{this.id}}" class="issue {{this.closedstate}}">
+      <div id="textwrapper">
+<h3 id="title">{{this.title}}</h3>
+    <p id="text">{{this.description}}</p>
+      </div>
+      <div id="otherwrapper">
+    
     <img src="{{avatarSrc}}" alt="avatar">
+    <h5>{{this.closedstate}}</h5> 
+      
+      
 
     {{#if this.closedstate }}
       <form method="post" action="issues/{{this.id}}/reopen">
@@ -25,7 +34,7 @@
       <button type="submit">Close issue</button>
       </form>
     {{/unless}}
-    
+    </div>
     </div>
 {{/each}}
 </div>

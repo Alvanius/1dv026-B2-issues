@@ -1,0 +1,125 @@
+body {
+    background-color: aquamarine;
+    margin: 10px;
+    padding: 0;
+}
+
+#issueswrapper {
+    margin: 15px auto;
+    width: min-content;
+    max-width: 90vw;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.issue {
+    border: black 2px solid;
+    background-color: azure;
+    padding: 20px;
+    min-height: 200px;
+    height: max-content;
+    max-height: 20vh;
+    width: 50vw;
+    display: flex;
+    gap: 2vw;
+    justify-content: space-between;
+}
+#textwrapper {
+    overflow: auto;
+}
+h1 {
+    font-size: 50px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+}
+#top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: max-content;
+    margin: 10px auto;
+    justify-content: center;
+    align-items: center;
+    margin-top: 70px;
+    padding: 10px;
+}
+
+#otherwrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 100px;
+}
+
+#newIssue {
+    background-color: rgb(82, 122, 141);
+    padding: 20px;
+    border: solid white 2px;
+    text-decoration: none;
+    border-radius: 35px;
+    color: #f6f5f3;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#newIssue:hover {
+    background-color: rgb(69, 85, 116);
+}
+
+#text {
+}
+
+h5 {
+    font-weight: 900;
+}
+
+#title {
+    grid-area: title;
+    font-weight: 800;
+    font-size: 30px;
+    margin: 0;
+}
+
+
+.closed {
+    background-color: rgb(228, 228, 225);
+    border-color: white;
+    color: gray;
+}
+
+.closed button {
+    background-color: white;
+}
+
+.closed button:hover {
+    background-color: rgb(236, 234, 234);
+}
+
+
+img {
+    border-radius: 50%;
+    width: 80px;
+}
+
+button {
+    padding: 10px;
+    margin: 0;
+    border-radius: 10px;
+    background-color: #d1a69f;
+}
+
+button:first-letter {
+    text-transform: uppercase;
+}
+
+button:hover {
+    background-color: #be9a95;
+}
