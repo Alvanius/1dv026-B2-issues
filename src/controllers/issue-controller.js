@@ -35,6 +35,7 @@ export class IssueController {
         }
       })
       .catch(error => {
+        console.log('error making gitlab API call changing state: ', error)
         next(error)
       })
   }
@@ -73,6 +74,7 @@ export class IssueController {
         }
       })
       .catch(error => {
+        console.log('error making gitlab API call creating issue: ', error)
         next(error)
       })
   }

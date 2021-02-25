@@ -7,6 +7,8 @@
 
 import fetch from 'node-fetch'
 
+const PROJECT = process.env.PROJECT_ID
+
 /**
  * Encapsulates a controller.
  */
@@ -23,25 +25,34 @@ export class HomeController {
     let numberOfPages
     const issues = []
     do {
-      const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${process.env.PROJECT_ID}/issues?page=${page}`
+      const response = await fetch(`https://gitlab.lnu.se/api/v4/projects/${PROJECT}/issues?page=${page}`
         , { headers: { Authorization: 'Bearer ' + process.env.PERSONAL_ACCESS_TOKEN } })
         .then(response => {
           if (response.ok) {
             numberOfPages = response.headers.raw()['x-total-pages'][0]
             return response.json()
+          } else {
+            console.log(`attempting to fetch issues from project ${PROJECT} and failed with status: ${response.status}`)
+            res.locals.fetchFailed = true
           }
         })
-      issues.push(...response.map(issueData => {
-        return {
-          title: issueData.title,
-          description: issueData.description,
-          avatarSrc: issueData.author.avatar_url,
-          id: issueData.iid,
-          closedstate: issueData.state === 'opened' ? '' : issueData.state
-        }
-      }))
+        .catch(error => {
+          console.log('error caught when fetching issues: ', error)
+          res.locals.fetchFailed = true
+        })
+      if (Array.isArray(response)) {
+        issues.push(...response.map(issueData => {
+          return {
+            title: issueData.title,
+            description: issueData.description,
+            avatarSrc: issueData.author.avatar_url,
+            id: issueData.iid,
+            closedstate: issueData.state === 'opened' ? '' : issueData.state
+          }
+        }))
+      }
     } while (page++ < numberOfPages)
 
-    res.render('home/index', { viewData: { issues: issues.reverse() }, title: 'Issue list' })
+    res.render('home/index', { viewData: { issues }, title: 'Issue list' })
   }
 }

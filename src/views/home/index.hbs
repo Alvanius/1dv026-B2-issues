@@ -1,12 +1,17 @@
 <h1>First page with issue list</h1>
 <a  href="./issues/new">Create new issue</a>
+
+{{#if fetchFailed }}
+    <h2>Failed to retrieve issues correctly</h2>
+{{/if}}
+
 {{#if viewData.issues.length }}
-<div class="issuewrapper">
+<div id="issuewrapper">
 {{#each viewData.issues}}
     <div id="issue{{this.id}}" class="issue">
       <h5>{{this.closedstate}}</h5>
-    <h3>{{this.title}}</h3>
-    <strong>{{this.description}}</strong>
+    <h3 id="title">{{this.title}}</h3>
+    <strong id="text">{{this.description}}</strong>
     <img src="https://gitlab.lnu.se/uploads/-/system/user/avatar/587/avatar.png" alt="avatar">
 
     {{#if this.closedstate }}
