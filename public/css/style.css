@@ -52,13 +52,13 @@ a {
     max-width: 90vw;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 17px;
     justify-content: center;
 }
 
 .issue {
     border: #c8bebe 2px solid;
-    background-color: azure;
+    background-color: white;
     padding: 20px;
     min-height: 200px;
     height: max-content;
