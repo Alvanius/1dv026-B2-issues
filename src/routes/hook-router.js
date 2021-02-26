@@ -12,4 +12,4 @@ export const router = express.Router()
 
 const controller = new HookController()
 
-router.post('/issue', controller.handleIssueChange)
+router.post('/issue', controller.authorize, controller.handleIssueChange)
