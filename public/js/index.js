@@ -3,7 +3,8 @@ import '../socket.io/socket.io.js'
 const wrapper = document.querySelector('#issueswrapper')
 
 if (wrapper) {
-  const socket = window.io()
+  const baseURL = document.querySelector('base').getAttribute('href')
+  const socket = window.io('/', { path: `${baseURL}socket.io` })
 
   socket.on('issueClosed', arg => {
     changeStateOfIssue(arg.id, 'Closed', 'reopen')
