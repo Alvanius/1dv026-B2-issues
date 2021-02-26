@@ -41,4 +41,20 @@ export class HookController {
     }
     res.status(200).send('Received issue hook')
   }
+
+  /**
+   * Authorizes the webhook.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  authorize (req, res, next) {
+    if (req.headers['x-gitlab-token'] !== process.env.HOOK_SECRET) {
+      res.status(403).send('Incorrect Secret')
+      return
+    }
+
+    next()
+  }
 }
