@@ -27,7 +27,7 @@ export class IssueController {
     await fetch(changeStateURL.toString(), { headers, method: 'PUT' })
       .then(response => {
         if (response.ok) {
-          res.redirect('./')
+          res.redirect('../../')
         } else {
           console.log('unsuccessful attempt to change issue state, got response: ', response)
           const error = new Error()
@@ -67,7 +67,7 @@ export class IssueController {
     await fetch(createIssueURL.toString(), { headers, method: 'POST' })
       .then(response => {
         if (response.status === 201) {
-          res.redirect('./')
+          res.redirect('../../')
         } else {
           console.log('unsuccessful attempt to create issue, got response: ', response)
           const error = new Error()
