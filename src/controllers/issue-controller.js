@@ -26,12 +26,13 @@ export class IssueController {
     changeStateURL.searchParams.append('state_event', requestedAction)
     await fetch(changeStateURL.toString(), { headers, method: 'PUT' })
       .then(response => {
-        if (!response.ok) {
+        if (response.ok) {
+          res.redirect('/')
+        } else {
+          console.log('unsuccessful attempt to change issue state, got response: ', response)
           const error = new Error()
           error.status = 404
           next(error)
-        } else {
-          res.redirect('/')
         }
       })
       .catch(error => {

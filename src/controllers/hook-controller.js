@@ -16,15 +16,15 @@ export class HookController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  handleIssue (req, res, next) {
-    const reqIssue = req.body.object_attributes
-    const id = reqIssue.iid
+  handleIssueChange (req, res, next) {
+    const issueData = req.body.object_attributes
+    const id = issueData.iid
     const issueDetails = {
-      text: reqIssue.description,
-      title: reqIssue.title,
+      text: issueData.description,
+      title: issueData.title,
       id
     }
-    switch (reqIssue.action) {
+    switch (issueData.action) {
       case 'open':
         issueDetails.avatarSrc = req.body.user.avatar_url
         res.io.emit('issueCreated', issueDetails)

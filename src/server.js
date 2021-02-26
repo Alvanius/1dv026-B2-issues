@@ -24,14 +24,14 @@ const directoryFullName = dirname(fileURLToPath(import.meta.url))
 const app = express()
 
 app.use(logger('dev'))
-app.use(
-  helmet.contentSecurityPolicy({
+app.use(helmet({
+  contentSecurityPolicy: {
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
       'img-src': ["'self'", 'gitlab.lnu.se']
     }
-  })
-)
+  }
+}))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
